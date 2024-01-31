@@ -1,5 +1,27 @@
-{% extends "base.html" %} {% block title%}Otázky učitelů{% endblock %}
-
+{% extends "base.html" %}{% block title %}Otázky{% endblock %}
 {% block content %}
-<h1>Zde budou nové otázky</h1>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    {% if session.role == 'student' %}
+    <div class="container mt-4">
+        <h1>Zde můžeš odpovídat na otázky</h1>
+        <hr>
+        <form action="/submit_answers" method="POST">
+            {% for question in questions %}
+            <div class="form-group">
+                <label for="question{{ question.id }}">Question {{ question.id }}: {{ question.text }}</label>
+                <textarea class="form-control" id="question{{ question.id }}" name="answer{{ question.id }}" rows="3" required></textarea>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">odeslat</button>
+        </form>
+    </div>
+    {% endif %}
+</body>
+</html>
 {% endblock %}
