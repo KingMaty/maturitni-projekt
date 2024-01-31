@@ -1,40 +1,56 @@
-{% extends "base.html" %} {% block title%}Registrace{% endblock %}
-
+{% extends "base.html" %}{% block title %}Registrace{% endblock %}
 {% block content %}
+
 <form method="POST">
     <h3 align="center">Registrace</h3>
     <div class="form-group">
-        <div class="form-group">
-            <label for="email">email</label>
-            <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="eamil"
-                placeholder="Enter email"
-            />
-    </div>
-    <div class="form-group">
-        <label for="password1">heslo</label>
+        <label for="fullname">Jméno</label>
         <input
             type="text"
             class="form-control"
+            id="name"
+            name="name"
+            placeholder="Celé jméno(s mezerou)"
+        />
+    </div>
+    <div class="form-group">
+        <label for="email">Školní email</label>
+        <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Školní email"
+        />
+    </div>
+    <div class="form-group">
+        <label for="password1">Heslo</label>
+        <input
+            type="password"
+            class="form-control"
             id="password1"
             name="password1"
-            placeholder="Enter password"
+            placeholder="Heslo"
         />
     </div>
     <div class="form-group">
         <label for="password2">Ověření hesla</label>
         <input
-            type="text"
+            type="password"
             class="form-control"
             id="password2"
             name="password2"
-            placeholder="Confirm password"
+            placeholder="Potvrzení hesla"
         />
     </div>
+    <div class="form-group">
+        <label for="status">Stav</label>
+        <select class="form-control" id="status" name="status">
+            <option value="student">Student</option>
+            <option value="teacher">Učitel</option>
+        </select>
+    </div>
     <br />
-    <button type="submit" class="btn btn-primary"></button>
+    <button type="submit" class="btn btn-primary">Zaregistrovat</button>
 </form>
 {% endblock %}
