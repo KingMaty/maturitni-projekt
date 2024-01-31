@@ -1,5 +1,29 @@
-{% extends "base.html" %} {% block title%}Odpovědi studentů{% endblock %}
-
+{% extends "base.html" %}{% block title %}Historie odpovědí{% endblock %}
 {% block content %}
-<h1>Zde bude veškerá historie odpovědí</h1>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Odpovědi na otázky</h1>
+    <h2>Seznam otázek</h2>
+    <ul>
+        {% for question in questions %}
+        <li><a href="/view_answers?id={{ question.id }}">{{ question.text }} - {{ question.created_at }}</a></li>
+        {% endfor %}
+    </ul>
+    <h2>Odpovědi na vybranou otázku</h2>
+    <div id="selected_question_answers">
+        {% if selected_question %}
+        <h3>{{ selected_question.text }} - {{ selected_question.created_at }}</h3>
+        <ul>
+            {% for answer in selected_question.answers %}
+            <li>{{ answer.text }} - {{ answer.created_at }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
 {% endblock %}
