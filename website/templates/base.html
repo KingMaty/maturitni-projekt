@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="cs">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Webová aplikace pro anonymní zpětnou vazbu{% endblock %}</title>
+</head>
+<body>
+    <p>{% if session.email != "" %} {{ session.email }} {% endif %}  </p>
+    <p>{% if session.role != "" %} {{ session.role }} {% endif %}  </p>
+    <p>Session: {{ session }} </p>    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Webová aplikace pro zpětnou vazbu</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    {% if not session.logged_in %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Domů</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/answers">Odpovědi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Odhlášení</a>
+                    </li>
+                    {% if session.role == 'student' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/active_questions">Otázky</a>
+                    </li>
+                    {% endif %}
+                    {% if session.role == 'teacher' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add_question">Přidat novou otázku</a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% if session.logged_in %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Přihlášení</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer class="footer mt-auto py-3 bg-dark text-white">
+        <div class="container text-center">
+            &copy; Webová aplikace pro anonymní zpětnou vazbu.
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Přidávání nových otázek{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1>Vytvořte novou otázku</h1>
+    <form action="/add_question" method="POST">
+        <div class="form-group">
+            <label for="question">Otázka:</label><br>
+            <textarea id="question" name="question" rows="5" cols="50" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="subject">Předmět:</label><br>
+            <select id="subject" name="subject">
+                {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Vytvořit</button>
+    </form>
+</div>
+{% endblock %}
+
