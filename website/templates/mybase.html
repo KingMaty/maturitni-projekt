@@ -14,7 +14,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/myindex">Domů</a>
+                <a class="nav-link active" aria-current="page" href="/home">Domů</a>
               </li>
               {% if session.role == 'student' %}
               <li class="nav-item">
@@ -23,14 +23,14 @@
               {% endif %}
               {% if session.role == 'teacher' %}
               <li class="nav-item">
-                  <a class="nav-link" href="/myadd_question">Přidat novou otázku</a>
+                  <a class="nav-link" href="/add_question">Přidat otázku</a>
               </li>
               {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="/myanswers">Odpovědi</a>
               </li>              
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Odhlášení</a>
+                <a class="nav-link" href="/logout">Odhlásit se</a>
               </li>
             </ul>
           </div>
