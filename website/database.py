@@ -20,6 +20,25 @@ def insert_data(conn, query, data):
         print("Error inserting data:", error)
         conn.rollback()
         return False
+    else :
+        return False
+    finally:
+        return True
 
+def delete_data(conn, query, data):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query, data)
+        conn.commit()
+        cursor.close()
+        return True
+    except mysql.connector.Error as error:
+        print("Error deleting data:", error)
+        conn.rollback()
+        return False
+    else :
+        return False
+    finally:
+        return True
 
     

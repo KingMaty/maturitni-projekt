@@ -6,7 +6,7 @@
     <form action="#" method="POST" name="Enter">
         {% for question in questions %}
         <label for="answer{{ question[0]}}"> <b>Akademický rok: </b> {{ question[3] }} Předmět: {{ question[4] }} Vyučující: {{ question[0] }} Otázka {{ question[1] }}</label>
-        <textarea class="form-control" id="{{ question[0] }}" name="{{ question[0] }}" rows="3" required></textarea>
+        <textarea class="form-control" id="{{ question[0] }}" name="{{ question[0] }}" rows="3"></textarea>
         {% endfor %}
         <button type="submit" class="btn btn-primary">Potvrď otázky</button>
     </form>
