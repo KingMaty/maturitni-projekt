@@ -7,12 +7,13 @@ from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from database import connect, insert_data, delete_data
+import json  
 
 global_conn = None
 
 auth_bp = Blueprint('auth', __name__, static_folder="static", template_folder="templates")
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  
 
 GOOGLE_CLIENT_ID = "476358247913-u7m802aipif8nnt7un4o8d46rldre87h.apps.googleusercontent.com"
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
@@ -26,12 +27,14 @@ flow = Flow.from_client_secrets_file(
 def db_is_connected():
     return
 
+
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return abort(401)
+            return abort(401)  
         else:
             return function()
+
     return wrapper
 
 @auth_bp.route("/login")
@@ -43,10 +46,8 @@ def login():
 @auth_bp.route("/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
-    print(request.args["state"])
-    print(session["state"])
     if not session["state"] == request.args["state"]:
-        abort(500)
+        abort(500)  
 
     credentials = flow.credentials
     request_session = requests.session()
@@ -77,38 +78,26 @@ def logout():
 
 @auth_bp.route("/")
 def index():
-    return "Nejdříve se přihlašte: <a href='/login'><button>Login</button></a>"
-
-@auth_bp.route("/protected_area")
-@login_is_required
-def protected_area():
-    return render_template("home.html", active_page="home")
+    return "Nejdříve se přihlašte: <a href='/login'><button>Přihlásit se</button></a>"
 
 @auth_bp.route("/answers")
 def answers():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
     else:
         return render_template("answers.html", active_page="myanswers")
 
 @auth_bp.route("/active_questions")
 def active_questions():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
     else:
         return render_template("active_questions.html", active_page="myactive_questions")
-
-@auth_bp.route("/home")
-def home():
-    if "google_id" not in session:
-        return abort(401)
-    else:
-        return render_template("home.html", active_page="home")
 
 @auth_bp.route("/myindex")
 def myindex():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
     else:
         return render_template("myindex.html", active_page="home")
 
@@ -128,7 +117,7 @@ def get_subjects_by_teacher(cursor, teacher_id):
 @auth_bp.route("/myanswers", methods=["POST", "GET"])
 def myanswers():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
 
     if "conn" not in session:
         global_conn = connect()
@@ -259,7 +248,7 @@ def insert_new_question(conn, question_text, subject_id, teacher_id):
 @auth_bp.route("/add_question", methods = ["POST","GET"])
 def add_question():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
 
     if "conn" not in session:
         global_conn = connect()
@@ -268,45 +257,43 @@ def add_question():
         cursor = global_conn.cursor()
         email = session["email"]
         teacher_id = get_teacher_id(cursor, email)
+
         if teacher_id is not None:
             subjects = get_subjects_by_teacher(cursor, teacher_id)
             questions = get_teacher_questions(cursor, teacher_id)
             if request.method == "GET":
-                return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question")
+                return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question")
             else:
                 selected_subject  = None
                 for key, value in request.form.items():
-                    print(f'Key: {key}, Value: {value}')
                     if (key == "selected_subject"):
                         if value.isdigit():
                             selected_subject = value
+
                     if (key == "delete_question"):
                         if delete_question(global_conn,value) != None :
                             questions = get_teacher_questions(cursor, teacher_id)
-                            return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question", deleted_successfuly = 1 ) 
+                            return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question", deleted_successfuly = 1 ) 
                         else:    
-                            return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question", deleted_successfuly = 2 ) 
+                            return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question", deleted_successfuly = 2 ) 
+                        
                     if (key == "new_question"):
                         if selected_subject == None :
-                            print ("1")
-                            return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question", select_subject = 1 ) 
+                            return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question", select_subject = 1 ) 
                         else:
-                            print ("2")
                             if insert_new_question(global_conn, value, selected_subject, teacher_id) != None :
-                                print("3")
                                 questions = get_teacher_questions(cursor, teacher_id)
-                                return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question", added_successfully = 1 )     
+                                return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question", added_successfully = 1 )     
                             else:
-                                print("4")
-                                return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question", added_successfully = 2 )     
-                return render_template("add_question.html", subjects=subjects, questions=questions , active_page="add_question")
+                                return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question", added_successfully = 2 )     
+                return render_template("add_question.html", subjects=subjects, questions = questions , active_page="add_question")
     else:
         return render_template("mydbconnerror.html", active_page="add_question")
 
 @auth_bp.route("/myactive_questions", methods=["POST", "GET"])
 def myactive_questions():
     if "google_id" not in session:
-        return abort(401)
+        return abort(401)  
 
     if "conn" not in session:
         global_conn = connect()
