@@ -1,0 +1,21 @@
+{% extends "mybase.html" %}
+{% block title %} Aktivní otázky {% endblock %}
+{% block content %}
+    <h1>Aktivní otázky</h1>
+    {% if session.role == 'student' %}
+    <form action="#" method="POST" name="Enter">
+        {% for question in questions %}
+        <label for="answer{{ question[0]}}"> <b>Akademický rok: </b> {{ question[3] }} <b>Předmět: </b> {{ question[4] }} <b>Otázka: </b> {{ question[1] }}</label>
+        <textarea class="form-control" id="{{ question[0] }}" name="{{ question[0] }}" rows="3"></textarea>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Odeslat odpovědi</button>
+    </form>
+    {% else %}
+    <ul>
+        {% for question in questions %}
+        <li>{{ question.text }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+{% endblock %}
