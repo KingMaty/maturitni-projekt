@@ -1,0 +1,28 @@
+{% extends "mybase.html" %}
+{% block title %} Přidávání nových otázek {% endblock %}
+{% block content %}
+    <h1>Přidat otázku</h1>
+    <form action="/add_question" method="POST">
+        <div class="mb-3">
+            <label for="new_question">Nová otázka</label>
+            <select class="form-select" id="dropdown1" name="selected_subject">
+              <option selected>Vyber předmět...</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject[0] }}">{{ subject[1] }}</button>
+                    {% endfor %}
+            </select>
+            <textarea class="form-control" id="new_question" name="new_question" rows="2" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Přidat otázku</button>
+    </form>
+
+    <h1>Aktivní otázky</h1>
+    <form action="/add_question" method="POST">
+        {% for question in questions %}
+        <div class="mb-3">
+            <label for="question_{{ question[0] }}"> {{ question[4] }} - {{ question[1] }}</label>
+            <button type="submit" name="delete_question" value="{{ question[0] }}" class="btn btn-danger">Smazat otázku</button>
+        </div>
+        {% endfor %}
+    </form>
+{% endblock %}
